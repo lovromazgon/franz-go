@@ -207,8 +207,8 @@ func (cl *Client) SchemaByVersion(ctx context.Context, subject string, version i
 	return ss, cl.get(ctx, path, &ss)
 }
 
-// Schemas returns all schemas for the given subject.
-func (cl *Client) Schemas(ctx context.Context, subject string, deleted HideShowDeleted) ([]SubjectSchema, error) {
+// SubjectVersions returns all versions for the given subject.
+func (cl *Client) SubjectVersions(ctx context.Context, subject string, deleted HideShowDeleted) ([]int, error) {
 	// GET /subjects/{subject}/versions => []int (versions)
 	var versions []int
 	path := pathSubjectWithVersion(subject)
@@ -219,7 +219,15 @@ func (cl *Client) Schemas(ctx context.Context, subject string, deleted HideShowD
 		return nil, err
 	}
 	sort.Ints(versions)
+	return versions, nil
+}
 
+// Schemas returns all schemas for the given subject.
+func (cl *Client) Schemas(ctx context.Context, subject string, deleted HideShowDeleted) ([]SubjectSchema, error) {
+	versions, err := cl.SubjectVersions(ctx, subject, deleted)
+	if err != nil {
+		return nil, err
+	}
 	var (
 		schemas      = make([]SubjectSchema, len(versions))
 		firstErr     error
