@@ -17,7 +17,7 @@ var (
 
 	// ErrBadHeader is returned from Decode when the input slice is shorter
 	// than five bytes, or if the first byte is not the magic 0 byte.
-	ErrBadHeader = errors.New("5 byte header for value is missing or does no have 0 magic byte")
+	ErrBadHeader = errors.New("5 byte header for value is missing or does not have 0 magic byte")
 )
 
 type (
